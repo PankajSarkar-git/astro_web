@@ -6,18 +6,19 @@ import ViewAstrologerModal from "@/components/Astrologers/ViewAstrologerModal";
 import DeleteAstrologerModal from "@/components/Astrologers/DeleteAstrologerModal";
 import { PaginationComponent } from "@/components/PaginationComponent";
 import { showToast } from "@/components/toast";
+import type { Astrologer } from "@/lib/types";
 
 export default function AstrologersPage() {
   const dispatch = useAppDispatch();
 
-  const [astrologers, setAstrologers] = useState<any[]>([]);
-  const [viewAstro, setViewAstro] = useState<any>(null);
+  const [astrologers, setAstrologers] = useState<Astrologer[]>([]);
+  const [viewAstro, setViewAstro] = useState<Astrologer | null>(null);
   const [deleteAstro, setDeleteAstro] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchAstros = async (page = 1) => {
+  const fetchAstro = async (page = 1) => {
     try {
       setIsLoading(true);
       const result = await dispatch(getAstrologers(page)).unwrap();
@@ -32,7 +33,7 @@ export default function AstrologersPage() {
   };
 
   useEffect(() => {
-    fetchAstros(currentPage);
+    fetchAstro(currentPage);
   }, [dispatch, currentPage]);
 
   const handleDelete = async () => {
@@ -40,7 +41,7 @@ export default function AstrologersPage() {
       await dispatch(deleteAstrologer(deleteAstro.id)).unwrap();
       showToast.success("Deleted successfully");
       setDeleteAstro(null);
-      fetchAstros(currentPage);
+      fetchAstro(currentPage);
     } catch (error) {
       showToast.error("Failed to delete");
     }

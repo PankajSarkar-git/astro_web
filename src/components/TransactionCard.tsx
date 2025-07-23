@@ -1,8 +1,10 @@
 import { ArrowDown, ArrowUp } from "lucide-react";
 import clsx from "clsx";
 import { toISTTime } from "@/lib/utils";
+import type { WalletTransaction } from "@/lib/types";
 
-const TransactionCard = ({ txn }: { txn: any }) => {
+const TransactionCard = ({ txn }: { txn: WalletTransaction }) => {
+  
   const isCredit = txn.type === "CREDIT";
 
   return (

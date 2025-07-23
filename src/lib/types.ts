@@ -1,16 +1,17 @@
-export interface WalletTransaction {
-  id: string;
-  amount: number;
-  type: "CREDIT" | "DEBIT";
-  description: string;
-  createdAt: string;
-}
+// ========== Common ==========
+
+export type Gender = "MALE" | "FEMALE" | "OTHER" | string;
+export type Role = "USER" | "ASTROLOGER" | "ADMIN" | string;
+export type WalletTransactionType = "CREDIT" | "DEBIT";
+
+// ========== Wallet ==========
 
 export interface WalletTransaction {
   id: string;
   amount: number;
-  type: "CREDIT" | "DEBIT";
+  type: WalletTransactionType;
   description: string;
+  createdAt: string;
   timestamp: string;
 }
 
@@ -28,46 +29,28 @@ export interface WalletResponse {
     id: string;
     balance: number;
     transactions: WalletTransaction[];
-    user: {
-      id: string;
-      name: string | null;
-      mobile: string;
-      gender: string | null;
-      birthDate: string | null;
-      birthTime: string | null;
-      birthPlace: string | null;
-      latitude: string | null;
-      longitude: string | null;
-      imgUri: string;
-      role: string;
-      walletBalance: number;
-      createdAt: string;
-      updatedAt: string;
-      freeChatUsed: boolean;
-    };
+    user: User;
   };
   isLastPage: boolean;
   totalPages: number;
   currentPage: number;
 }
 
+// ========== User ==========
+
 export interface User {
   id: string;
   name: string | null;
   mobile: string;
-  gender: string | null;
+  gender: Gender | null;
   birthDate: string | null;
   birthTime: string | null;
   birthPlace: string | null;
   latitude: string | null;
   longitude: string | null;
   imgUri: string;
-  role: string;
-  wallet: {
-    id: string;
-    balance: number;
-    transactions: WalletTransaction[];
-  };
+  role: Role;
+  wallet: Wallet;
   createdAt: string;
   updatedAt: string;
   freeChatUsed: boolean;
@@ -79,25 +62,26 @@ export interface UserResponse {
   user: User;
 }
 
-// User info nested in Astrologer
+// ========== Astrologer ==========
+
 export interface AstrologerUser {
   id: string;
   name: string;
   mobile: string;
-  gender?: string | null;
+  gender?: Gender | null;
   birthDate?: string | null;
   birthTime?: string | null;
   birthPlace?: string | null;
   latitude?: number | null;
   longitude?: number | null;
   imgUri?: string | null;
-  role: string;
+  role: Role;
   walletBalance: number;
   createdAt: string;
   updatedAt: string;
+  freeChatUsed: boolean;
 }
 
-// Main Astrologer object structure
 export interface Astrologer {
   id: string;
   user: AstrologerUser;
@@ -109,16 +93,17 @@ export interface Astrologer {
   pricePerMinuteVoice: number;
   pricePerMinuteVideo: number;
   blocked: boolean;
+  online: boolean;
 }
 
-// Response when getting astrologers
 export interface GetAstrologersResponse {
   astrologers: Astrologer[];
   totalPages: number;
   currentPage: number;
 }
 
-// State shape for Redux slice
+// ========== Astrologer Redux ==========
+
 export interface AstrologerState {
   astrologers: Astrologer[];
   selectedAstrologer: Astrologer | null;
@@ -126,7 +111,8 @@ export interface AstrologerState {
   error: string | null;
 }
 
-// Payload for create/edit action (JSON part)
+// ========== Payloads ==========
+
 export interface AstrologerFormPayload {
   name: string;
   mobile: string;
@@ -139,13 +125,37 @@ export interface AstrologerFormPayload {
   languages?: string;
 }
 
-// Payload for createAstrologer thunk
 export interface CreateAstrologerThunkInput {
   astrologerData: AstrologerFormPayload;
   imageFile?: File;
 }
 
-// Payload for editAstrologer thunk
 export interface EditAstrologerThunkInput extends CreateAstrologerThunkInput {
   id: string;
+}
+
+
+
+export interface Stats {
+  totalUsers: number;
+  totalAstrologers: number;
+  totalUserWalletBalance: number;
+  totalAstrologerWalletBalance: number;
+}
+
+export interface MonthlyProfit {
+  month: string;
+  profit: number;
+}
+
+export interface StatsResponse {
+  msg: string;
+  stats: Stats;
+  success: boolean;
+}
+
+export interface MonthlyProfitResponse {
+  msg: string;
+  success: boolean;
+  monthlyProfits: MonthlyProfit[];
 }

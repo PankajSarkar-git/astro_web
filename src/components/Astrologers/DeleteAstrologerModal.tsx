@@ -6,13 +6,14 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import type { Astrologer } from "@/lib/types";
 
 export default function DeleteAstrologerModal({
   astro,
   onConfirm,
   onCancel,
 }: {
-  astro: any;
+  astro: Astrologer;
   onConfirm: () => void;
   onCancel: () => void;
 }) {

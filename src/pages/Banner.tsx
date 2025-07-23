@@ -48,7 +48,7 @@ const Banner = () => {
 
     setIsUploading(true);
     try {
-       await dispatch(uploadBanner(formData)).unwrap();
+      await dispatch(uploadBanner(formData)).unwrap();
       showToast.success("Banner uploaded successfully.");
       setSelectedFile(null);
       setPreviewUrl(null);

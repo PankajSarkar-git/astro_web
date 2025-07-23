@@ -13,6 +13,7 @@ import storage from "redux-persist/lib/storage";
 import authReducer from "./auth";
 import userReducer from "./user";
 import astrologersReducer from "./astrologers";
+import dashboardReducer from "./dashboard";
 
 const persistConfig = {
   key: "astro",
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   user: userReducer,
   astrologers: astrologersReducer,
+  dashboard: dashboardReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
