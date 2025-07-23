@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <ProtectedLayout />,
     children: [
-      { index: true, element: <Home /> },
+      { index: true, element: <Dashboard /> },
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/astrologers", element: <Astrologers /> },
       { path: "/astrologers-create", element: <AstrologerFormPage /> },
