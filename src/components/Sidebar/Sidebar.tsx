@@ -4,6 +4,7 @@ import { IoGridOutline } from "react-icons/io5";
 import SidebarSection from "./SidebarSection";
 import { UserDropdown } from "./UserDropdown/indix";
 import { useSidebarData } from "./data/sidebarData";
+import logo from "../../assets/logo.png";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
@@ -34,18 +35,18 @@ export default function Sidebar() {
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-gray-100 p-1">
             <img
-              src="/public/logo/logo.png"
+              src={logo}
               alt="Logo"
               className="h-10 w-10 rounded-full object-cover"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src =
-                  "https://via.placeholder.com/40";
+                  "https://static.vecteezy.com/system/resources/thumbnails/020/911/740/small_2x/user-profile-icon-profile-avatar-user-icon-male-icon-face-icon-profile-icon-free-png.png";
               }}
             />
           </div>
           {isOpen && (
             <h2 className="text-lg font-semibold tracking-wide text-gray-800">
-             Astrosevaa
+              Astrosevaa
             </h2>
           )}
         </div>
