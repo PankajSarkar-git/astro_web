@@ -112,7 +112,7 @@ const Banner = () => {
             <CardTitle className="text-lg">Uploaded Banners</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1">
+            <div className="grid gap-4 grid-cols-1">
               {banners.map((banner) => (
                 <div
                   key={banner.id}

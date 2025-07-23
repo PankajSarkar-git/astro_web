@@ -166,7 +166,7 @@ export function PaginationComponent({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="w-full flex flex-col gap-3 items-center sm:items-end pr-4 sm:pr-10">
+    <div className="w-full mt-4 flex flex-col gap-3 items-center sm:items-end pr-4 sm:pr-10">
       <Pagination className="w-full justify-center sm:justify-end">
         <PaginationContent className="flex flex-wrap gap-1">
           {/* Prev */}
