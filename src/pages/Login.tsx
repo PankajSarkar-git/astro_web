@@ -43,7 +43,6 @@ const Login = () => {
         console.log("Verified Token:", response.token);
       }
     } catch (err: any) {
-      showToast.error(err?.message || "Something went wrong");
       console.log(err);
     } finally {
       setLoading(false);

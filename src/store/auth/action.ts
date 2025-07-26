@@ -29,7 +29,7 @@ export const loginUser = createAsyncThunk<
   { rejectValue: any }
 >("auth/login", async (payload, { rejectWithValue }) => {
   try {
-    const response = await api.post("/api/v1/auth/login", payload);
+    const response = await api.post("/api/v1/auth/login?role=ADMIN", payload);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data || error.message);

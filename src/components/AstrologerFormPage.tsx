@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import type { UseFormRegister, FieldErrors } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -46,14 +45,14 @@ const formFields = [
     name: "name" as const,
     label: "Name",
     type: "text",
-    placeholder: "Ravi Sharma",
+    placeholder: "Enter full name e.g., Ravi Sharma",
     validation: { required: "Name is required" },
   },
   {
     name: "mobile" as const,
     label: "Mobile",
     type: "text",
-    placeholder: "9876543210",
+    placeholder: "Enter 10-digit mobile number",
     validation: {
       required: "Mobile number is required",
       pattern: {
@@ -66,42 +65,66 @@ const formFields = [
     name: "expertise" as const,
     label: "Expertise",
     type: "text",
-    placeholder: "Vedic Astrology, Palmistry",
+    placeholder: "e.g., Vedic Astrology, Palmistry",
     validation: { required: "Expertise is required" },
   },
   {
     name: "experienceYears" as const,
     label: "Experience (Years)",
     type: "number",
-    placeholder: "8",
-    validation: { required: "Experience is required" },
+    placeholder: "e.g., 5",
+    validation: {
+      required: "Experience is required",
+      min: {
+        value: 0,
+        message: "Experience cannot be negative",
+      },
+    },
   },
   {
     name: "pricePerMinuteChat" as const,
     label: "Chat Price (₹)",
     type: "number",
-    placeholder: "15",
-    validation: { required: "Chat price is required" },
+    placeholder: "e.g., 20",
+    validation: {
+      required: "Chat price is required",
+      min: {
+        value: 0,
+        message: "Price cannot be negative",
+      },
+    },
   },
   {
     name: "pricePerMinuteVoice" as const,
     label: "Voice Price (₹)",
     type: "number",
-    placeholder: "25",
-    validation: { required: "Voice price is required" },
+    placeholder: "e.g., 30",
+    validation: {
+      required: "Voice price is required",
+      min: {
+        value: 0,
+        message: "Price cannot be negative",
+      },
+    },
   },
   {
     name: "pricePerMinuteVideo" as const,
     label: "Video Price (₹)",
     type: "number",
-    placeholder: "30",
-    validation: { required: "Video price is required" },
+    placeholder: "e.g., 50",
+    validation: {
+      required: "Video price is required",
+      min: {
+        value: 0,
+        message: "Price cannot be negative",
+      },
+    },
   },
   {
     name: "about" as const,
     label: "About",
     type: "textarea",
-    placeholder: "Brief description about the astrologer",
+    placeholder: "Write a brief introduction about astrologer",
     validation: { required: "About is required" },
   },
 ];
@@ -153,11 +176,14 @@ export default function AstrologerFormPage({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     reset,
     setValue,
     watch,
-  } = useForm<AstrologerFormData>();
+    trigger,
+  } = useForm<AstrologerFormData>({
+    mode: "onChange", // real-time validation
+  });
 
   const watchImage = watch("profileImage");
 
@@ -165,8 +191,9 @@ export default function AstrologerFormPage({
     if (watchImage && watchImage.length > 0) {
       const file = watchImage[0];
       setImagePreview(URL.createObjectURL(file));
+      trigger("profileImage"); // validate image field
     }
-  }, [watchImage]);
+  }, [watchImage, trigger]);
 
   useEffect(() => {
     const fetchAstrologer = async () => {
@@ -260,8 +287,17 @@ export default function AstrologerFormPage({
                   id="profileImage"
                   type="file"
                   accept="image/*"
-                  {...register("profileImage")}
+                  {...register("profileImage", {
+                    validate: (fileList) =>
+                      (fileList && fileList?.length > 0) ||
+                      "Profile image is required",
+                  })}
                 />
+                {errors.profileImage && (
+                  <p className="text-red-500 text-sm">
+                    {errors.profileImage.message}
+                  </p>
+                )}
                 {imagePreview && (
                   <img
                     src={imagePreview}
@@ -271,7 +307,11 @@ export default function AstrologerFormPage({
                 )}
               </div>
 
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!isValid || isSubmitting}
+              >
                 {isSubmitting
                   ? mode === "edit"
                     ? "Updating..."
