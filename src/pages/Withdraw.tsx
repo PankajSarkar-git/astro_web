@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   CheckCircle,
-  XCircle,
   User,
   Clock,
   IndianRupee,
@@ -107,16 +106,16 @@ const Withdraw: React.FC = () => {
     }
   };
 
-  const handleReject = async (requestId: string) => {
-    setProcessingId(requestId);
-    // Simulate API call
-    setTimeout(() => {
-      setWithdrawals((prev) =>
-        prev.filter((withdrawal) => withdrawal.id !== requestId)
-      );
-      setProcessingId(null);
-    }, 1500);
-  };
+//   const handleReject = async (requestId: string) => {
+//     setProcessingId(requestId);
+//     // Simulate API call
+//     setTimeout(() => {
+//       setWithdrawals((prev) =>
+//         prev.filter((withdrawal) => withdrawal.id !== requestId)
+//       );
+//       setProcessingId(null);
+//     }, 1500);
+//   };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

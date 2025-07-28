@@ -4,8 +4,8 @@ import { getTokenFromStore } from "../lib/get-token";
 import skipAuthPaths from "./skip-path";
 import { showToast } from "@/components/toast";
 
-const baseUrl = "https://quagga-driving-socially.ngrok-free.app";
-// const baseUrl = "https://astrosevaa.com";
+// const baseUrl = "https://quagga-driving-socially.ngrok-free.app";
+const baseUrl = "https://astrosevaa.com";
 
 const api = axios.create({
   baseURL: baseUrl,
