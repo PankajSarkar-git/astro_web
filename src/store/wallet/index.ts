@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addBalanceToUser, getUserWalletTransactions } from "./action";
+import { addBalanceToUser, getPaymentWithdrawal, getPaymentWithdrawalsRequest, getUserWalletTransactions } from "./action";
 
-interface WalletState {}
+interface WalletState { }
 
 const initialState: WalletState = {};
 
@@ -10,10 +10,12 @@ const walletSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getUserWalletTransactions.fulfilled, () => {});
-    builder.addCase(addBalanceToUser.fulfilled, () => {});
+    builder.addCase(getUserWalletTransactions.fulfilled, () => { });
+    builder.addCase(addBalanceToUser.fulfilled, () => { });
+    builder.addCase(getPaymentWithdrawalsRequest.fulfilled, () => { });
+    builder.addCase(getPaymentWithdrawal.fulfilled, () => { });
   },
 });
 
-export { getUserWalletTransactions, addBalanceToUser };
+export { getUserWalletTransactions, addBalanceToUser, getPaymentWithdrawalsRequest, getPaymentWithdrawal };
 export default walletSlice.reducer;

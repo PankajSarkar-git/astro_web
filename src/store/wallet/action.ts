@@ -17,6 +17,36 @@ export const getUserWalletTransactions = createAsyncThunk<
   }
 });
 
+export const getPaymentWithdrawalsRequest = createAsyncThunk<
+  any,
+  { page?: number },
+  { rejectValue: any }
+>("wallet/PaymentWithdrawalsRequest", async ({ page = 1 }, { rejectWithValue }) => {
+  try {
+    const response = await api.get(
+      `/api/v1/withdraw?page=${page}`
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
+export const getPaymentWithdrawal = createAsyncThunk<
+  any,
+  { id: string },
+  { rejectValue: any }
+>("wallet/getPaymentWithdrawal", async ({ id = '' }, { rejectWithValue }) => {
+  try {
+    const response = await api.get(
+      `/api/v1/withdraw/approve/${id}`
+    );
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
 export const addBalanceToUser = createAsyncThunk<
   any,
   { mobile: string; amount: number },

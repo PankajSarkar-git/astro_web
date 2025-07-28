@@ -9,6 +9,7 @@ import AstrologerFormPage from "@/components/AstrologerFormPage";
 import AstrologerEdit from "@/pages/AstrologerEdit";
 import SearchUser from "@/pages/SearchUser";
 import Banner from "@/pages/Banner";
+import Withdraw from "@/pages/Withdraw";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
       { path: "/astrologers-edit/:id", element: <AstrologerEdit /> },
       { path: "/search-user", element: <SearchUser /> },
       { path: "/banner", element: <Banner /> },
+      { path: "/withdraw", element: <Withdraw /> },
     ],
   },
   { path: "*", element: <NotFound /> },
