@@ -49,14 +49,32 @@ export const getUsers = createAsyncThunk<User[], void, { rejectValue: any }>(
 
 // GET user by mobile number
 export const getUserByMobile = createAsyncThunk<
-  UserResponse, 
-  string, 
+  UserResponse,
+  string,
   { rejectValue: any }
 >("user/getByMobile", async (mobile, { rejectWithValue }) => {
   try {
     const response = await api.get(`/api/v1/users/${mobile}`);
-    return response.data; 
+    return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data || error.message);
   }
 });
+
+
+
+export const resetUserPassword = createAsyncThunk<
+  any,
+  string,
+  { rejectValue: any }
+>(
+  "user/resetPassword",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/api/v1/admin/reset-password/${userId}`);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch } from "@/store/hooks";
-import { getUserByMobile } from "@/store/user";
+import { getUserByMobile, resetUserPassword } from "@/store/user";
 import { getUserWalletTransactions, addBalanceToUser } from "@/store/wallet";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PaginationComponent } from "@/components/PaginationComponent";
@@ -177,6 +177,22 @@ const SearchUser: React.FC = () => {
       hour: "2-digit",
       minute: "2-digit",
     });
+  };
+
+  const handleResetPassword = async (): Promise<void> => {
+    if (!searchState.user?.id) return;
+
+    try {
+      const payload = await dispatch(
+        resetUserPassword(searchState.user.id)
+      ).unwrap();
+      if (payload.success) {
+        showToast.success(payload.msg);
+      }
+    } catch (err: any) {
+      console.error(err);
+      showToast.error("Failed to reset password.");
+    }
   };
 
   return (
@@ -387,6 +403,14 @@ const SearchUser: React.FC = () => {
                       {formatDateTime(searchState.user.updatedAt)}
                     </p>
                   </div>
+                </div>
+                <div className="mt-6 flex justify-end">
+                  <Button
+                    onClick={handleResetPassword}
+                    className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-all duration-200"
+                  >
+                    Reset Password
+                  </Button>
                 </div>
               </CardContent>
             </Card>

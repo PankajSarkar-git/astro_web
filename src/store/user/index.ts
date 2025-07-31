@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getUserByMobile, getUsers } from "../user/action";
+import { getUserByMobile, getUsers, resetUserPassword } from "../user/action";
 
 interface UserState {
   users: any[];
@@ -22,9 +22,10 @@ const userSlice = createSlice({
       state.loading = false;
       state.users = action.payload;
     });
-    builder.addCase(getUserByMobile.fulfilled, () => {});
+    builder.addCase(getUserByMobile.fulfilled, () => { });
+    builder.addCase(resetUserPassword.fulfilled, () => { });
   },
 });
 
 export default userSlice.reducer;
-export { getUsers, getUserByMobile };
+export { getUsers, getUserByMobile, resetUserPassword };
