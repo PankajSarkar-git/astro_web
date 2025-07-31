@@ -24,6 +24,7 @@ export interface AstrologerPayload {
   pricePerMinuteVoice: number;
   pricePerMinuteVideo: number;
   about: string;
+  password: string;
 }
 
 export interface CreateAstrologerThunkInput {
@@ -127,6 +128,14 @@ const formFields = [
     placeholder: "Write a brief introduction about astrologer",
     validation: { required: "About is required" },
   },
+  {
+    name: "password" as const,
+    label: "Password",
+    type: "text",
+    placeholder: "Write your password",
+    validation: { required: "Password is required" },
+    isPassword: true,
+  },
 ];
 
 // ------------------ FormField Component ------------------
@@ -138,28 +147,52 @@ const FormField = ({
   field: (typeof formFields)[number];
   register: UseFormRegister<AstrologerFormData>;
   errors: FieldErrors<AstrologerFormData>;
-}) => (
-  <div className="space-y-2">
-    <Label htmlFor={field.name}>{field.label}</Label>
-    {field.type === "textarea" ? (
-      <Textarea
-        id={field.name}
-        placeholder={field.placeholder}
-        {...register(field.name, field.validation)}
-      />
-    ) : (
-      <Input
-        id={field.name}
-        type={field.type}
-        placeholder={field.placeholder}
-        {...register(field.name, field.validation)}
-      />
-    )}
-    {errors[field.name] && (
-      <p className="text-red-500 text-sm">{errors[field.name]?.message}</p>
-    )}
-  </div>
-);
+}) => {
+  const [showPassword, setShowPassword] = useState(false);
+  const isPasswordField = field.name === "password";
+
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={field.name}>{field.label}</Label>
+
+      {field.type === "textarea" ? (
+        <Textarea
+          id={field.name}
+          placeholder={field.placeholder}
+          {...register(field.name, field.validation)}
+        />
+      ) : (
+        <div className="relative">
+          <Input
+            id={field.name}
+            type={
+              isPasswordField && !showPassword
+                ? "password"
+                : isPasswordField && showPassword
+                ? "text"
+                : field.type
+            }
+            placeholder={field.placeholder}
+            {...register(field.name, field.validation)}
+          />
+          {isPasswordField && (
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-blue-500"
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {errors[field.name] && (
+        <p className="text-red-500 text-sm">{errors[field.name]?.message}</p>
+      )}
+    </div>
+  );
+};
 
 // ------------------ Main Component ------------------
 export default function AstrologerFormPage({
@@ -182,7 +215,7 @@ export default function AstrologerFormPage({
     watch,
     trigger,
   } = useForm<AstrologerFormData>({
-    mode: "onChange", // real-time validation
+    mode: "onChange",
   });
 
   const watchImage = watch("profileImage");
@@ -191,7 +224,7 @@ export default function AstrologerFormPage({
     if (watchImage && watchImage.length > 0) {
       const file = watchImage[0];
       setImagePreview(URL.createObjectURL(file));
-      trigger("profileImage"); // validate image field
+      trigger("profileImage");
     }
   }, [watchImage, trigger]);
 
@@ -233,6 +266,7 @@ export default function AstrologerFormPage({
       pricePerMinuteVoice: data.pricePerMinuteVoice,
       pricePerMinuteVideo: data.pricePerMinuteVideo,
       about: data.about,
+      password: data.password, // ✅ include password in payload
     };
 
     const imageFile = data.profileImage?.[0];
