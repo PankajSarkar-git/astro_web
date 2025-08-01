@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { showToast } from "./toast";
+import { EyeClosedIcon, EyeIcon } from "lucide-react";
 
 // ------------------ Interfaces ------------------
 export interface AstrologerPayload {
@@ -128,17 +129,9 @@ const formFields = [
     placeholder: "Write a brief introduction about astrologer",
     validation: { required: "About is required" },
   },
-  {
-    name: "password" as const,
-    label: "Password",
-    type: "text",
-    placeholder: "Write your password",
-    validation: { required: "Password is required" },
-    isPassword: true,
-  },
 ];
 
-// ------------------ FormField Component ------------------
+// ------------------ Reusable FormField Component ------------------
 const FormField = ({
   field,
   register,
@@ -148,9 +141,6 @@ const FormField = ({
   register: UseFormRegister<AstrologerFormData>;
   errors: FieldErrors<AstrologerFormData>;
 }) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const isPasswordField = field.name === "password";
-
   return (
     <div className="space-y-2">
       <Label htmlFor={field.name}>{field.label}</Label>
@@ -162,33 +152,52 @@ const FormField = ({
           {...register(field.name, field.validation)}
         />
       ) : (
-        <div className="relative">
-          <Input
-            id={field.name}
-            type={
-              isPasswordField && !showPassword
-                ? "password"
-                : isPasswordField && showPassword
-                ? "text"
-                : field.type
-            }
-            placeholder={field.placeholder}
-            {...register(field.name, field.validation)}
-          />
-          {isPasswordField && (
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-blue-500"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </button>
-          )}
-        </div>
+        <Input
+          id={field.name}
+          type={field.type}
+          placeholder={field.placeholder}
+          {...register(field.name, field.validation)}
+        />
       )}
 
       {errors[field.name] && (
         <p className="text-red-500 text-sm">{errors[field.name]?.message}</p>
+      )}
+    </div>
+  );
+};
+
+// ------------------ Password Field (Only for Create) ------------------
+const PasswordField = ({
+  register,
+  errors,
+}: {
+  register: UseFormRegister<AstrologerFormData>;
+  errors: FieldErrors<AstrologerFormData>;
+}) => {
+  const [showPassword, setShowPassword] = useState(false);
+  return (
+    <div className="space-y-2">
+      <Label htmlFor="password">Password</Label>
+      <div className="relative">
+        <Input
+          id="password"
+          type={showPassword ? "text" : "password"}
+          placeholder="Write your password"
+          {...register("password", {
+            required: "Password is required",
+          })}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword((prev) => !prev)}
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-blue-500"
+        >
+          {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
+        </button>
+      </div>
+      {errors.password && (
+        <p className="text-red-500 text-sm">{errors.password.message}</p>
       )}
     </div>
   );
@@ -257,6 +266,8 @@ export default function AstrologerFormPage({
   }, [mode, astrologerId, dispatch, setValue]);
 
   const handleFormSubmit = async (data: AstrologerFormData) => {
+    const imageFile = data.profileImage?.[0];
+
     const astrologerData: AstrologerPayload = {
       name: data.name,
       mobile: data.mobile,
@@ -266,16 +277,19 @@ export default function AstrologerFormPage({
       pricePerMinuteVoice: data.pricePerMinuteVoice,
       pricePerMinuteVideo: data.pricePerMinuteVideo,
       about: data.about,
-      password: data.password, // ✅ include password in payload
+      password: data.password || "default",
     };
-
-    const imageFile = data.profileImage?.[0];
 
     setIsSubmitting(true);
     try {
       if (mode === "edit" && astrologerId) {
+        const { password, ...astrologerDataWithoutPassword } = astrologerData;
         await dispatch(
-          editAstrologer({ id: astrologerId, astrologerData, imageFile })
+          editAstrologer({
+            id: astrologerId,
+            astrologerData: astrologerDataWithoutPassword,
+            imageFile,
+          })
         ).unwrap();
         showToast.success("Astrologer updated successfully!");
       } else {
@@ -314,6 +328,10 @@ export default function AstrologerFormPage({
                 />
               ))}
 
+              {mode === "create" && (
+                <PasswordField register={register} errors={errors} />
+              )}
+
               {/* Image Upload */}
               <div className="space-y-2">
                 <Label htmlFor="profileImage">Profile Image</Label>
@@ -322,9 +340,13 @@ export default function AstrologerFormPage({
                   type="file"
                   accept="image/*"
                   {...register("profileImage", {
-                    validate: (fileList) =>
-                      (fileList && fileList?.length > 0) ||
-                      "Profile image is required",
+                    validate: (fileList) => {
+                      if (mode === "edit" && imagePreview) return true;
+                      return (
+                        (fileList && fileList.length > 0) ||
+                        "Profile image is required"
+                      );
+                    },
                   })}
                 />
                 {errors.profileImage && (
@@ -344,7 +366,10 @@ export default function AstrologerFormPage({
               <Button
                 type="submit"
                 className="w-full"
-                disabled={!isValid || isSubmitting}
+                disabled={
+                  (!isValid && !(mode === "edit" && imagePreview)) ||
+                  isSubmitting
+                }
               >
                 {isSubmitting
                   ? mode === "edit"
