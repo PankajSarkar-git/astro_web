@@ -47,7 +47,7 @@ const StatsGrid = ({ stats, loading }: StatsGridProps) => {
     },
     {
       title: "Admin Wallet Balance",
-      value: stats?.totalAdminWalletBalance,
+      value: stats?.totalAdminWalletBalance || 0,
       icon: <IndianRupeeIcon className="w-8 h-8" />,
       gradient: "from-indigo-500 to-purple-500",
       bgGradient: "from-indigo-50 to-purple-50",
