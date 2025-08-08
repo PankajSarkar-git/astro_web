@@ -1,4 +1,4 @@
-import { DollarSign, UserCheck, Users, Wallet } from "lucide-react";
+import { DollarSign, IndianRupeeIcon, UserCheck, Users, Wallet } from "lucide-react";
 import SkeletonCard from "./SkeletonCard";
 import StatCard from "./StatCard";
 
@@ -8,6 +8,7 @@ interface StatsGridProps {
     totalAstrologers: number;
     totalUserWalletBalance: number;
     totalAstrologerWalletBalance: number;
+    totalAdminWalletBalance:number;
   };
   loading: boolean;
 }
@@ -42,6 +43,14 @@ const StatsGrid = ({ stats, loading }: StatsGridProps) => {
       icon: <DollarSign className="w-8 h-8" />,
       gradient: "from-orange-500 to-red-500",
       bgGradient: "from-orange-50 to-red-50",
+      prefix: "₹",
+    },
+    {
+      title: "Admin Wallet Balance",
+      value: stats?.totalAdminWalletBalance,
+      icon: <IndianRupeeIcon className="w-8 h-8" />,
+      gradient: "from-indigo-500 to-purple-500",
+      bgGradient: "from-indigo-50 to-purple-50",
       prefix: "₹",
     },
   ];

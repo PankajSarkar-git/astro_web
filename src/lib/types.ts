@@ -141,6 +141,7 @@ export interface Stats {
   totalAstrologers: number;
   totalUserWalletBalance: number;
   totalAstrologerWalletBalance: number;
+  totalAdminWalletBalance:number;
 }
 
 export interface MonthlyProfit {
